@@ -1,3 +1,9 @@
 language: node_js
 node_js:
   - "8.10"
+install:
+- npm cit
+# keep the npm cache around to speed up installs
+cache:
+  directories:
+  - "$HOME/.npm"
