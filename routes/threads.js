@@ -4,7 +4,7 @@ var pg = require('pg');
 
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/imageboard';
 
-//
+// get list of threads on a board
 router.get('/boards/:boardName/threads', function(req, res, next) {
     var client = new pg.Client(connectionString);
     client.connect();
@@ -20,6 +20,7 @@ router.get('/boards/:boardName/threads', function(req, res, next) {
 
 });
 
+// get a specific thread
 router.get('/boards/:boardName/threads/:threadId(\d+)', function(req, res, next) {
     var client = new pg.Client(connectionString);
     client.connect();
@@ -34,6 +35,7 @@ router.get('/boards/:boardName/threads/:threadId(\d+)', function(req, res, next)
     });
 });
 
+// create a thread
 router.post('/boards/:boardName/threads', function (req, res, next) {
     const title = req.body.title;
     if (!title) {
@@ -53,6 +55,7 @@ router.post('/boards/:boardName/threads', function (req, res, next) {
     });
 });
 
+// create a post in a thread
 router.post('/boards/:boardName/threads/:threadId(\d+)', function (req, res, next) {
     const title = req.body.title;
     if (!title) {
