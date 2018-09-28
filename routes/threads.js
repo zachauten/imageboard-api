@@ -16,6 +16,7 @@ router.get('/boards/:boardName/threads', function(req, res, next) {
         var json = JSON.stringify(result.rows);
         res.status(200);
         res.send(json);
+        client.end();
     });
 
 });
@@ -32,6 +33,7 @@ router.get('/boards/:boardName/threads/:threadId(\d+)', function(req, res, next)
         var json = JSON.stringify(result.rows);
         res.status(200);
         res.send(json);
+        client.end();
     });
 });
 
@@ -52,17 +54,26 @@ router.post('/boards/:boardName/threads', function (req, res, next) {
         } 
         res.status(201);
         res.send();
+        client.end();
     });
 });
 
 // create a post in a thread
 router.post('/boards/:boardName/threads/:threadId(\d+)', function (req, res, next) {
-    const title = req.body.title;
-    if (!title) {
-        const error = new Error('New thread must have title.');
-        error.httpStatusCode = 400;
-        return next(error);
-    }
+    const name = req.body.name;
+    const commentary = req.body.commentary;
+    const thread = req.params.threadId;
+    client.query('insert into posts(name, commentary, thread) values(\'' 
+        + name + '\',\'' + commentary + '\'' + thread + '\');', 
+        function(err, result) {
+        if (err) {
+            err.httpStatusCode = 500;
+            return next(err);
+        } 
+        res.status(201);
+        res.send();
+        client.end();
+    });
 });
 
 module.exports = router;

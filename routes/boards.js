@@ -16,6 +16,7 @@ router.get('/boards', function(req, res, next) {
         var json = JSON.stringify(result.rows);
         res.status(200);
         res.send(json);
+        client.end();
     });
 });
 
@@ -36,6 +37,7 @@ router.post('/boards', function (req, res, next) {
         }
         res.status(201);
         res.send();
+        client.end();
     });
 });
 
@@ -51,6 +53,7 @@ router.get('/boards/:boardName', function (req, res, next) {
         var json = JSON.stringify(result.rows);
         res.status(200);
         res.send(json);
+        client.end();
     });
 });
 
@@ -66,6 +69,7 @@ router.get('/boards/:boardName/:page(\d+)', function (req, res, next) {
         var json = JSON.stringify(result.rows);
         res.status(200);
         res.send(json);
+        client.end();
     });
 });
 
