@@ -1,61 +1,38 @@
-var express = require('express');
-var router = express.Router();
-var pg = require('pg');
-
-var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/imageboard';
+const { Router } = require('express');
+const router = new Router();
+const pool = require('../database');
 
 // get list of threads on a board
-router.get('/boards/:boardName/threads', function(req, res, next) {
-    var client = new pg.Client(connectionString);
-    client.connect();
-    client.query('select * from threads where board = \'' + req.params.boardName + '\';', function(err, result) {
-        if (err) {
-            err.httpStatusCode = 500;
-            return next(err);
-        }
-        var json = JSON.stringify(result.rows);
-        res.status(200);
-        res.send(json);
-        client.end();
-    });
-
+router.get('/boards/:boardName/threads', function (req, res, next) {
+    (async () => {
+        const { rows } = await pool.query('select * from threads where board = \'' + req.params.boardName + '\';');
+        var json = JSON.stringify(rows);
+        res.status(200).send(json);
+    })().catch(e => setImmediate(() => { throw e }))
 });
 
 // get a specific thread
-router.get('/boards/:boardName/threads/:threadId(\d+)', function(req, res, next) {
-    var client = new pg.Client(connectionString);
-    client.connect();
-    client.query('select * from threads where id = \'' + req.params.threadId + '\';', function(err, result) {
-        if (err) {
-            err.httpStatusCode = 500;
-            return next(err);
-        }
-        var json = JSON.stringify(result.rows);
-        res.status(200);
-        res.send(json);
-        client.end();
-    });
+router.get('/boards/:boardName/threads/:threadId(\d+)', function (req, res, next) {
+    (async () => {
+        const { rows } = await pool.query('select * from threads where id = \'' + req.params.threadId + '\';');
+        var json = JSON.stringify(rows);
+        res.status(200).send(json);
+    })().catch(e => setImmediate(() => { throw e }))
 });
 
 // create a thread
 router.post('/boards/:boardName/threads', function (req, res, next) {
     const title = req.body.title;
+    const board = req.params.boardName;
     if (!title) {
         const error = new Error('New thread must have title.');
         error.httpStatusCode = 400;
         return next(error);
     }
-    var client = new pg.Client(connectionString);
-    client.connect();
-    client.query('insert into threads(title, board) values(' + title + ', ' + req.params.boardName + ');', function(err, result) {
-        if (err) {
-            err.httpStatusCode = 500;
-            return next(err);
-        } 
-        res.status(201);
-        res.send();
-        client.end();
-    });
+    (async () => {
+        await pool.query('insert into threads(title, board) values(' + title + ', ' + board + ');');
+        res.status(201).send();
+    })().catch(e => setImmediate(() => { throw e }))
 });
 
 // create a post in a thread
@@ -63,17 +40,11 @@ router.post('/boards/:boardName/threads/:threadId(\d+)', function (req, res, nex
     const name = req.body.name;
     const commentary = req.body.commentary;
     const thread = req.params.threadId;
-    client.query('insert into posts(name, commentary, thread) values(\'' 
-        + name + '\',\'' + commentary + '\'' + thread + '\');', 
-        function(err, result) {
-        if (err) {
-            err.httpStatusCode = 500;
-            return next(err);
-        } 
-        res.status(201);
-        res.send();
-        client.end();
-    });
+    (async () => {
+        await pool.query('insert into posts(name, commentary, thread) values(\''
+            + name + '\',\'' + commentary + '\'' + thread + '\');');
+        res.status(201).send();
+    })().catch(e => setImmediate(() => { throw e }))
 });
 
 module.exports = router;

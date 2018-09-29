@@ -1,76 +1,55 @@
-var express = require('express');
-var router = express.Router();
-var pg = require('pg');
-
-var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/imageboard';
+const { Router } = require('express');
+const router = new Router();
+// const { Pool } = require('pg');
+// const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/imageboard';
+// const pool = new Pool({
+//     connectionString: connectionString
+// });
+const pool = require('../database');
 
 // get a list of all boards
-router.get('/boards', function(req, res, next) {
-    var client = new pg.Client(connectionString);
-    client.connect();
-    client.query('select * from boards;', function(err, result) {
-        if (err) {
-            err.httpStatusCode = 500;
-            return next(err);
-        }
-        var json = JSON.stringify(result.rows);
-        res.status(200);
-        res.send(json);
-        client.end();
-    });
+router.get('/boards', function (req, res, next) {
+    (async () => {
+        const { rows } = await pool.query('select * from boards;');
+        var json = JSON.stringify(rows);
+        res.status(200).send(json);
+    })().catch(e => setImmediate(() => { throw e }))
 });
 
 // create a new board
 router.post('/boards', function (req, res, next) {
-    const boardName = req.body.name;
-    if (!boardName) {
+    const board = req.body.name;
+    if (!board) {
         const error = new Error('Missing board name.');
         error.httpStatusCode = 400;
         return next(error);
     }
-    var client = new pg.Client(connectionString);
-    client.connect();
-    client.query('insert into boards values(\'' + req.body.name + '\');', function(err, result) {
-        if (err) {
-            err.httpStatusCode = 500;
-            return next(err);
-        }
-        res.status(201);
-        res.send();
-        client.end();
-    });
+    (async () => {
+        const { rows } = await pool.query('insert into boards values(\'' + board + '\');');
+        var json = JSON.stringify(rows);
+        res.status(201).send(json);
+    })().catch(e => setImmediate(() => { throw e }))
 });
 
 // get a board by name
-router.get('/boards/:boardName', function (req, res, next) {
-    var client = new pg.Client(connectionString);
-    client.connect();
-    client.query('select * from boards where name = \'' + req.params.boardName + '\';', function(err, result) {
-        if (err) {
-            err.httpStatusCode = 500;
-            return next(err);
-        }
-        var json = JSON.stringify(result.rows);
-        res.status(200);
-        res.send(json);
-        client.end();
-    });
+router.get('/boards/:board', function (req, res, next) {
+    const board = req.params.board;
+    (async () => {
+        const { rows } = await pool.query('select * from boards where name = \'' + board + '\';');
+        var json = JSON.stringify(rows);
+        res.status(200).send(json);
+    })().catch(e => setImmediate(() => { throw e }))
 });
 
+//TODO: implement pagination
 // get the threads on a page of a board
-router.get('/boards/:boardName/:page(\d+)', function (req, res, next) {
-    var client = new pg.Client(connectionString);
-    client.connect();
-    client.query('select * from boards where name = \'' + req.params.boardName + '\';', function(err, result) {
-        if (err) {
-            err.httpStatusCode = 500;
-            return next(err);
-        }
-        var json = JSON.stringify(result.rows);
-        res.status(200);
-        res.send(json);
-        client.end();
-    });
+router.get('/boards/:board/:page(\d+)', function (req, res, next) {
+    const board = req.params.board;
+    (async () => {
+        const { rows } = await pool.query('select * from boards where name = \'' + board + '\';');
+        var json = JSON.stringify(rows);
+        res.status(200).send(json);
+    })().catch(e => setImmediate(() => { throw e }))
 });
 
 module.exports = router;
