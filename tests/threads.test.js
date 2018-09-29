@@ -1,10 +1,10 @@
 const request = require('supertest');
 const app = require('../app')
 
-const boardName = 'firstboard';
+const threadId = 1;
 
-describe('GET v1/boards/' + boardName +'/threads', () => {
+describe('GET v1/threads/' + threadId, () => {
     test('should respond with 200', () => {
-        return request(app).get('/v1/boards/' + boardName +'/threads').expect(200);
+        return request(app).get('/v1/threads/' + threadId).expect(200);
     });
 });

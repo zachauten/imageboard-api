@@ -2,30 +2,29 @@ const router = require('express-promise-router')();
 const db = require('../database');
 
 // get a list of all boards
-router.get('/boards', async (req, res) => {
+router.get('/', async (req, res) => {
     const { rows } = await db.query('select * from boards;');
     var json = JSON.stringify(rows);
     res.status(200).send(json);
-    await pool.end();
+    await db.end();
 });
 
 // create a new board
-router.post('/boards', async (req, res) => {
-    const board = req.body.name;
-    if (!board) {
+router.post('/', async (req, res) => {
+    const { name } = req.body;
+    if (!name) {
         const error = new Error('Missing board name.');
         error.httpStatusCode = 400;
         return next(error);
     }
-    const { rows } = await pool.query('insert into boards values(\'' + board + '\');');
-    var json = JSON.stringify(rows);
-    res.status(201).send(json);
+    await pool.query('insert into boards values($1);', [name]);
+    res.status(201).send();
 });
 
-// get a board by name
-router.get('/boards/:board', async (req, res) => {
-    const board = req.params.board;
-    const { rows } = await pool.query('select * from boards where name = \'' + board + '\';');
+// Get threads on a board
+router.get('/:board', async (req, res) => {
+    const { board } = req.params;
+    const { rows } = await pool.query('select * from threads where board = $1;', [board]);
     var json = JSON.stringify(rows);
     res.status(200).send(json);
 });
@@ -33,8 +32,8 @@ router.get('/boards/:board', async (req, res) => {
 //TODO: implement pagination
 // get the threads on a page of a board
 router.get('/boards/:board/:page(\d+)', async (req, res) => {
-    const board = req.params.board;
-    const { rows } = await pool.query('select * from boards where name = \'' + board + '\';');
+    const {board} = req.params;
+    const { rows } = await pool.query('select * from boards where name = $1;', [board]);
     var json = JSON.stringify(rows);
     res.status(200).send(json);
 });

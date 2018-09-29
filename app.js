@@ -14,8 +14,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/v1/', boards);
-app.use('/v1/', threads);
+app.use('/v1/boards', boards);
+app.use('/v1/threads', threads);
 
 // catch all for all non-routes, put after all other "app.use"s
 app.use(function (req, res) {
