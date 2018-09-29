@@ -6,7 +6,7 @@ router.get('/', async (req, res) => {
     const { rows } = await db.query('select * from boards;');
     var json = JSON.stringify(rows);
     res.status(200).send(json);
-    await db.end();
+    db.end();
 });
 
 // create a new board
@@ -19,6 +19,7 @@ router.post('/', async (req, res) => {
     }
     await pool.query('insert into boards values($1);', [name]);
     res.status(201).send();
+    db.end();
 });
 
 // Get threads on a board
@@ -27,6 +28,7 @@ router.get('/:board', async (req, res) => {
     const { rows } = await pool.query('select * from threads where board = $1;', [board]);
     var json = JSON.stringify(rows);
     res.status(200).send(json);
+    db.end();
 });
 
 //TODO: implement pagination
@@ -36,6 +38,7 @@ router.get('/boards/:board/:page(\d+)', async (req, res) => {
     const { rows } = await pool.query('select * from boards where name = $1;', [board]);
     var json = JSON.stringify(rows);
     res.status(200).send(json);
+    db.end();
 });
 
 module.exports = router;

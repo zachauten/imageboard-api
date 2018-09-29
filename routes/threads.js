@@ -11,6 +11,7 @@ router.post('/', async (req, res) => {
     }
     await db.query('insert into threads(title, board) values($1, $2);', [title, board]);
     res.status(201).send();
+    db.end();
 });
 
 // TODO: change to get all posts from a thread?
@@ -30,6 +31,7 @@ router.post('/:thread(\d+)', async (req, res) => {
     const thread = req.params.thread;
     await db.query('insert into posts(name, commentary, thread) values($1, $2, $3);', [name, commentary, thread]);
     res.status(201).send();
+    db.end();
 });
 
 module.exports = router;
