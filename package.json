@@ -6,7 +6,7 @@
         "start": "node ./bin/www",
         "devstart": "nodemon ./bin/www",
         "test": "jest",
-        "debugJest": "jest --detectOpenHandles"
+        "detect": "jest --detectOpenHandles"
     },
     "dependencies": {
         "body-parser": "~1.18.2",

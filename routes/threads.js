@@ -1,6 +1,13 @@
 const router = require('express').Router();
-const db = require('../database');
 const asyncMiddleware = require('../asyncMiddleware');
+const threadQueries = require('../data/threadQueries');
+
+// TODO: change to get all posts from a thread?
+router.get('/:thread(\\d+)', asyncMiddleware(async (req, res) => {
+    const { thread } = req.params;
+    let json = await threadQueries.readThread(thread);
+    res.status(200).send(json);
+}));
 
 router.post('/', asyncMiddleware(async (req, res) => {
     const { title, board } = req.body;
@@ -8,24 +15,14 @@ router.post('/', asyncMiddleware(async (req, res) => {
         res.status(400);
         throw new Error('New thread must have title.');
     }
-    await db.query('insert into threads(title, board) values($1, $2);', [title, board]);
+    await threadQueries.createThread(title, board);
     res.status(201).send();
 }));
 
-// TODO: change to get all posts from a thread?
-// TODO: Use regex on route to only take int
-router.get('/:thread', asyncMiddleware(async (req, res) => {
-    const { thread } = req.params;
-    const { rows } = await db.query('select * from threads where id = $1;', [thread]);
-    var json = JSON.stringify(rows);
-    res.status(200).send(json);
-}));
-
-// TODO: regex (\d+)
-router.post('/:thread', asyncMiddleware(async (req, res) => {
+router.post('/:thread(\\d+)', asyncMiddleware(async (req, res) => {
     const { name, commentary } = req.body;
-    const thread = req.params.thread;
-    await db.query('insert into posts(name, commentary, thread) values($1, $2, $3);', [name, commentary, thread]);
+    const { thread } = req.params;
+    await threadQueries.createPost(name, commentary, thread);
     res.status(201).send();
 }));
 
