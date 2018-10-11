@@ -1,15 +1,10 @@
-var fs = require('fs');
 var app = require('../app');
 var debug = require('debug')('pipe-backend:server');
-var https = require('https');
-var options = {
-    key: fs.readFileSync('encryption/key.pem'),
-    cert: fs.readFileSync('encryption/cert.pem'),
-};
+var http = require('http');
 
 var port = normalizePort(process.env.PORT || '8080');
 app.set('port', port);
-var server = https.createServer(options, app);
+var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
