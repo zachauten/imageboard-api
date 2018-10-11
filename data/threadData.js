@@ -1,6 +1,6 @@
-const db = require('../database');
+const db = require('./database');
 
-module.exports.readThread = (thread) => {
+module.exports.getOneThread = (thread) => {
     let rows = db.query('select * from threads where id = $1;', [thread]);
     return JSON.stringify(rows);
 };

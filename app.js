@@ -4,8 +4,8 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-const boards = require('./routes/boards');
-const threads = require('./routes/threads');
+const boards = require('./routes/boardRouter');
+const threads = require('./routes/threadRouter');
 
 const app = express();
 
