@@ -5,6 +5,6 @@ const asyncMiddleWare = require('../asyncMiddleware');
 router.get('/', asyncMiddleWare(boardController.getAllBoards));
 router.post('/', asyncMiddleWare(boardController.createBoard));
 router.get('/:board', asyncMiddleWare(boardController.getOneBoard));
-router.get('/boards/:board/:page(\\d+)', asyncMiddleWare(boardController.getPage));
+router.get('/:board/:page(\\d+)', asyncMiddleWare(boardController.getPage));
 
 module.exports = router;
