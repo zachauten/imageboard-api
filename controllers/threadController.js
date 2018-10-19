@@ -1,4 +1,5 @@
 const threadData = require('../data/threadData');
+const logger = require('../logger');
 
 module.exports.getOneThread = async (req, res) => {
     const { thread } = req.params;
@@ -6,7 +7,7 @@ module.exports.getOneThread = async (req, res) => {
         let json = await threadData.getOneThread(thread);
         res.status(200).send(json);
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send();
     }
 };
@@ -21,7 +22,7 @@ module.exports.createThread = async (req, res) => {
         await threadData.createThread(title, board);
         res.status(201).send();
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send();
     }
 };
@@ -33,7 +34,7 @@ module.exports.createPost = async (req, res) => {
         await threadData.createPost(name, commentary, thread);
         res.status(201).send();
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send();
     }
 };
