@@ -1,6 +1,7 @@
 describe('boardController', () => {
     const boardController = require('../controllers/boardController');
     const boardData = require('../data/boardData');
+    const { MockRequest, MockResponse } = require('../tests/mocks');
     jest.mock('../data/boardData');
 
     test('getAllBoards happy path', async () => {
@@ -142,19 +143,3 @@ describe('boardController', () => {
         expect(mockResponse.body).toBeUndefined();
     });
 });
-
-function MockResponse() {
-    this.status = (code) => {
-        this.code = code;
-        return this;
-    }
-    this.send = (body) => {
-        this.body = body;
-        return this;
-    }
-};
-
-function MockRequest(params, body) {
-    this.params = params;
-    this.body = body;
-}
