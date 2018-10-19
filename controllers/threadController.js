@@ -7,6 +7,7 @@ module.exports.getOneThread = async (req, res) => {
         res.status(200).send(json);
     } catch (error) {
         console.log(error);
+        res.status(500).send();
     }
 };
 
@@ -21,6 +22,7 @@ module.exports.createThread = async (req, res) => {
         res.status(201).send();
     } catch (error) {
         console.log(error);
+        res.status(500).send();
     }
 };
 
@@ -32,5 +34,6 @@ module.exports.createPost = async (req, res) => {
         res.status(201).send();
     } catch (error) {
         console.log(error);
+        res.status(500).send();
     }
 };

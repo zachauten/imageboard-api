@@ -7,6 +7,7 @@ module.exports.getAllBoards = async (req, res) => {
         res.send(json);    
     } catch (error) {
         console.log(error);
+        res.status(500).send();
     }
 };
 
@@ -17,6 +18,7 @@ module.exports.getOneBoard = async (req, res) => {
         res.status(200).send(json);
     } catch (error) {
         console.log(error);
+        res.status(500).send();
     }
 };
 
@@ -31,6 +33,7 @@ module.exports.createBoard = async (req, res) => {
         res.status(201).send();    
     } catch (error) {
         console.log(error);
+        res.status(500).send();
     }
 };
 
@@ -48,5 +51,6 @@ module.exports.getPage = async (req, res) => {
         res.status(200).send(json);
     } catch (error) {
         console.log(error);
+        res.status(500).send();
     }
 };

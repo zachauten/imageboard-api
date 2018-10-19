@@ -23,11 +23,11 @@ describe('boardController', () => {
         try {
             await boardController.getAllBoards({}, mockResponse);
         } catch (error) {
-            expect(boardData.getAllBoards).toBeCalledTimes(1);
             expect(error).toEqual(mockError);
-            expect(mockResponse.code).toBe(500);
-            expect(mockResponse.body).toBeNull();
         }
+        expect(boardData.getAllBoards).toBeCalledTimes(1);
+        expect(mockResponse.code).toBe(500);
+        expect(mockResponse.body).toBeUndefined();
     });
 
     test('getOneBoard happy path', async () => {
@@ -59,7 +59,7 @@ describe('boardController', () => {
     });
 
     test('createBoard happy path', async () => {
-        boardData.createBoard.mockReturnValue(null);
+        boardData.createBoard.mockReturnValue();
         var mockRequest = new MockRequest({}, { 'name': 'test' });
         var mockResponse = new MockResponse();
         await boardController.createBoard(mockRequest, mockResponse);
@@ -75,11 +75,11 @@ describe('boardController', () => {
         try {
             await boardController.createBoard(mockRequest, mockResponse);
         } catch (error) {
-            expect(boardData.createBoard).toBeCalledTimes(1);
             expect(error).toEqual(missingNameError);
-            expect(mockResponse.code).toBe(400);
-            expect(mockResponse.body).toBeUndefined();
         }
+        expect(mockResponse.code).toBe(400);
+        expect(mockResponse.body).toBeUndefined();
+        expect(boardData.createBoard).toBeCalledTimes(0);
     });
 
     test('createBoard server error', async () => {
@@ -87,28 +87,59 @@ describe('boardController', () => {
         boardData.createBoard.mockImplementation(() => {
             throw mockError;
         });
-        var mockRequest = new MockRequest({}, {'name': 'test'});
+        var mockRequest = new MockRequest({}, { 'name': 'test' });
         var mockResponse = new MockResponse();
         try {
             await boardController.createBoard(mockRequest, mockResponse);
         } catch (error) {
-            expect(boardData.createBoard).toBeCalledTimes(1);
             expect(error).toEqual(mockError);
-            expect(mockResponse.code).toBe(500);
-            expect(mockResponse.body).toBeUndefined();
         }
+        expect(boardData.createBoard).toBeCalledTimes(1);
+        expect(mockResponse.code).toBe(500);
+        expect(mockResponse.body).toBeUndefined();
     });
 
     test('getPage page 1', async () => {
-
+        const mockData = 'page';
+        boardData.getPage.mockReturnValue(mockData);
+        var mockRequest = new MockRequest({ 'board': 'testboard', 'page': 1 }, {});
+        var mockResponse = new MockResponse();
+        await boardController.getPage(mockRequest, mockResponse);
+        expect(boardData.getPage).toBeCalledTimes(1);
+        expect(mockResponse.code).toBe(200);
+        expect(mockResponse.body).toBe(mockData);
     });
 
     test('getPage invalid page number', async () => {
-
+        const pageNumberError = new Error('Page must be an integer greater than 0.')
+        boardData.getPage.mockReturnValue();
+        var mockRequest = new MockRequest({ 'board': 'testboard', 'page': 0 }, {});
+        var mockResponse = new MockResponse();
+        try {
+            await boardController.getPage(mockRequest, mockResponse);
+        } catch (error) {
+            expect(error).toEqual(pageNumberError);
+        }
+        expect(boardData.getPage).toBeCalledTimes(0);
+        expect(mockResponse.code).toBe(400);
+        expect(mockResponse.body).toBeUndefined();
     });
 
     test('getPage server error', async () => {
-
+        const mockError = new Error('Error thrown inside boardData.getPage');
+        boardData.getPage.mockImplementation(() => {
+            throw mockError;
+        });
+        var mockRequest = new MockRequest({ 'board': 'testboard', 'page': 1 }, {});
+        var mockResponse = new MockResponse();
+        try {
+            await boardController.getPage(mockRequest, mockResponse);
+        } catch (error) {
+            expect(error).toEqual(mockError);
+        }
+        expect(boardData.getPage).toBeCalledTimes(1);
+        expect(mockResponse.code).toBe(500);
+        expect(mockResponse.body).toBeUndefined();
     });
 });
 
@@ -116,11 +147,11 @@ function MockResponse() {
     this.status = (code) => {
         this.code = code;
         return this;
-    },
-        this.send = (body) => {
-            this.body = body;
-            return this;
-        }
+    }
+    this.send = (body) => {
+        this.body = body;
+        return this;
+    }
 };
 
 function MockRequest(params, body) {
