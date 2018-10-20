@@ -3,13 +3,8 @@ const logger = require('../logger')
 
 module.exports.getOneThread = async (req, res) => {
     const { thread } = req.params
-    try {
-        let json = await threadData.getOneThread(thread)
-        res.status(200).send(json)
-    } catch (error) {
-        logger.error(error)
-        res.status(500).send()
-    }
+    let json = await threadData.getOneThread(thread)
+    res.status(200).send(json)
 }
 
 module.exports.createThread = async (req, res) => {
@@ -18,23 +13,13 @@ module.exports.createThread = async (req, res) => {
         res.status(400)
         throw new Error('New thread must have title.')
     }
-    try {
-        await threadData.createThread(title, board)
-        res.status(201).send()
-    } catch (error) {
-        logger.error(error)
-        res.status(500).send()
-    }
+    await threadData.createThread(title, board)
+    res.status(201).send()
 }
 
 module.exports.createPost = async (req, res) => {
     const { name, commentary } = req.body
     const { thread } = req.params
-    try {
-        await threadData.createPost(name, commentary, thread)
-        res.status(201).send()
-    } catch (error) {
-        logger.error(error)
-        res.status(500).send()
-    }
+    await threadData.createPost(name, commentary, thread)
+    res.status(201).send()
 }

@@ -24,10 +24,13 @@ describe('threadController', () => {
         })
         var mockRequest = new MockRequest({ thread: 'thread' }, {})
         var mockResponse = new MockResponse()
-        await threadController.getOneThread(mockRequest, mockResponse)
+        try {
+            await threadController.getOneThread(mockRequest, mockResponse)
+        } catch (error) {
+            expect(error).toEqual(mockError)
+        }
         expect(threadData.getOneThread).toBeCalledTimes(1)
-        expect(mockResponse.code).toBe(500)
-        expect(mockResponse.body).toBeUndefined()
+        expect(mockResponse.code).toBeUndefined()
     })
 
     test('createThread happy path', async () => {
@@ -44,7 +47,7 @@ describe('threadController', () => {
 
     test('createThread without title', async () => {
         const missingTitleError = new Error('New thread must have title.')
-        threadData.createThread.mockReturnValue()
+        threadData.createThread.mockReturnValue('foo')
         var mockRequest = new MockRequest({}, {})
         var mockResponse = new MockResponse()
         try {
@@ -74,8 +77,7 @@ describe('threadController', () => {
         } catch (error) {
             expect(error).toEqual(mockError)
         }
-        expect(mockResponse.code).toBe(500)
-        expect(mockResponse.body).toBeUndefined()
+        expect(mockResponse.code).toBeUndefined()
         expect(threadData.createThread).toBeCalledTimes(1)
     })
 
@@ -106,8 +108,7 @@ describe('threadController', () => {
         } catch (error) {
             expect(error).toEqual(mockError)
         }
-        expect(mockResponse.code).toBe(500)
-        expect(mockResponse.body).toBeUndefined()
+        expect(mockResponse.code).toBeUndefined()
         expect(threadData.createPost).toBeCalledTimes(1)
     })
 })

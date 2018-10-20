@@ -28,8 +28,7 @@ describe('boardController', () => {
             expect(error).toEqual(mockError)
         }
         expect(boardData.getAllBoards).toBeCalledTimes(1)
-        expect(mockResponse.code).toBe(500)
-        expect(mockResponse.body).toBeUndefined()
+        expect(mockResponse.code).toBeUndefined()
     })
 
     test('getOneBoard happy path', async () => {
@@ -55,8 +54,7 @@ describe('boardController', () => {
         } catch (error) {
             expect(boardData.getOneBoard).toBeCalledTimes(1)
             expect(error).toEqual(mockError)
-            expect(mockResponse.code).toBe(500)
-            expect(mockResponse.body).toBeNull()
+            expect(mockResponse.code).toBeUndefined()
         }
     })
 
@@ -71,7 +69,7 @@ describe('boardController', () => {
 
     test('createBoard no board name in request body', async () => {
         const missingNameError = new Error('Missing board name.')
-        boardData.createBoard.mockReturnValue()
+        boardData.createBoard.mockReturnValue('foo')
         var mockRequest = new MockRequest({}, {})
         var mockResponse = new MockResponse()
         try {
@@ -97,11 +95,10 @@ describe('boardController', () => {
             expect(error).toEqual(mockError)
         }
         expect(boardData.createBoard).toBeCalledTimes(1)
-        expect(mockResponse.code).toBe(500)
-        expect(mockResponse.body).toBeUndefined()
+        expect(mockResponse.code).toBeUndefined()
     })
 
-    test('getPage page 1', async () => {
+    test('getPage happy path', async () => {
         const mockData = 'page'
         boardData.getPage.mockReturnValue(mockData)
         var mockRequest = new MockRequest({ board: 'testboard', page: 1 }, {})
@@ -116,7 +113,7 @@ describe('boardController', () => {
         const pageNumberError = new Error(
             'Page must be an integer greater than 0.'
         )
-        boardData.getPage.mockReturnValue()
+        boardData.getPage.mockReturnValue('foo')
         var mockRequest = new MockRequest({ board: 'testboard', page: 0 }, {})
         var mockResponse = new MockResponse()
         try {
@@ -142,7 +139,6 @@ describe('boardController', () => {
             expect(error).toEqual(mockError)
         }
         expect(boardData.getPage).toBeCalledTimes(1)
-        expect(mockResponse.code).toBe(500)
-        expect(mockResponse.body).toBeUndefined()
+        expect(mockResponse.code).toBeUndefined()
     })
 })

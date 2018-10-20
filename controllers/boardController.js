@@ -2,25 +2,15 @@ const boardData = require('../data/boardData')
 const logger = require('../logger')
 
 module.exports.getAllBoards = async (req, res) => {
-    try {
-        let json = await boardData.getAllBoards()
-        res.status(200)
-        res.send(json)
-    } catch (error) {
-        logger.error(error)
-        res.status(500).send()
-    }
+    let json = await boardData.getAllBoards()
+    res.status(200)
+    res.send(json)
 }
 
 module.exports.getOneBoard = async (req, res) => {
     const { board } = req.params
-    try {
-        let json = await boardData.getOneBoard(board)
-        res.status(200).send(json)
-    } catch (error) {
-        logger.error(error)
-        res.status(500).send()
-    }
+    let json = await boardData.getOneBoard(board)
+    res.status(200).send(json)
 }
 
 module.exports.createBoard = async (req, res) => {
@@ -29,13 +19,8 @@ module.exports.createBoard = async (req, res) => {
         res.status(400)
         throw new Error('Missing board name.')
     }
-    try {
-        await boardData.createBoard(name)
-        res.status(201).send()
-    } catch (error) {
-        logger.error(error)
-        res.status(500).send()
-    }
+    await boardData.createBoard(name)
+    res.status(201).send()
 }
 
 module.exports.getPage = async (req, res) => {
@@ -47,11 +32,6 @@ module.exports.getPage = async (req, res) => {
         res.status(400)
         throw new Error('Page must be an integer greater than 0.')
     }
-    try {
-        let json = await boardData.getPage(board, pageSize, offset)
-        res.status(200).send(json)
-    } catch (error) {
-        logger.error(error)
-        res.status(500).send()
-    }
+    let json = await boardData.getPage(board, pageSize, offset)
+    res.status(200).send(json)
 }
