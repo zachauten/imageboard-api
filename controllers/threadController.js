@@ -1,5 +1,4 @@
 const threadData = require('../data/threadData')
-const logger = require('../logger')
 
 module.exports.getOneThread = async (req, res) => {
     const { thread } = req.params

@@ -1,6 +1,7 @@
 var app = require('../app')
 var debug = require('debug')('pipe-backend:server')
 var http = require('http')
+var logger = require('../logger')
 
 var port = normalizePort(process.env.PORT || '8080')
 app.set('port', port)
@@ -35,11 +36,11 @@ function onError(error) {
     // handle specific listen errors with friendly messages
     switch (error.code) {
         case 'EACCES':
-            console.error(bind + ' requires elevated privileges')
+            logger.error(bind + ' requires elevated privileges')
             process.exit(1)
             break
         case 'EADDRINUSE':
-            console.error(bind + ' is already in use')
+            logger.error(bind + ' is already in use')
             process.exit(1)
             break
         default:

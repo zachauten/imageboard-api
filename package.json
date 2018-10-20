@@ -14,12 +14,16 @@
         "cookie-parser": "1.4.3",
         "debug": "2.6.9",
         "express": "4.16.3",
-        "helmet": "^3.14.0",
+        "helmet": "3.14.0",
         "morgan": "1.9.0",
         "pg": "7.4.3",
         "winston": "3.1.0"
     },
     "devDependencies": {
+        "babel-eslint": "10.0.1",
+        "eslint": "5.7.0",
+        "eslint-config-prettier": "3.1.0",
+        "eslint-plugin-prettier": "3.0.0",
         "husky": "1.1.2",
         "jest": "23.6.0",
         "nodemon": "1.17.5",
@@ -39,6 +43,18 @@
         "hooks": {
             "pre-commit": "pretty-quick --staged && npm test",
             "pre-push": "npm test"
+        }
+    },
+    "eslintConfig": {
+        "extends": [
+            "eslint:recommended",
+            "plugin:prettier/recommended"
+        ],
+        "parser": "babel-eslint",
+        "env": {
+            "jest": true,
+            "node": true,
+            "es6": true
         }
     }
 }

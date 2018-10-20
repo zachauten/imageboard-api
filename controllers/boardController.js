@@ -1,5 +1,4 @@
 const boardData = require('../data/boardData')
-const logger = require('../logger')
 
 module.exports.getAllBoards = async (req, res) => {
     let json = await boardData.getAllBoards()
