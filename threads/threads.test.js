@@ -1,8 +1,8 @@
 describe('threadController', () => {
-    const threadController = require('../controllers/threadController')
-    const threadData = require('../data/threadData')
+    const threadController = require('./threadController')
+    const threadData = require('./threadData')
     const { MockRequest, MockResponse } = require('../tests/mocks')
-    jest.mock('../data/threadData')
+    jest.mock('./threadData')
 
     test('getOneThread happy path', async () => {
         const expectedResponse = 'foo'

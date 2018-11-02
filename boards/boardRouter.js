@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const boardController = require('../controllers/boardController')
+const boardController = require('./boardController')
 const asyncMiddleWare = require('../asyncMiddleware')
 
 router.get('/', asyncMiddleWare(boardController.getAllBoards))

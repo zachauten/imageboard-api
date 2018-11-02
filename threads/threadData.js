@@ -1,4 +1,4 @@
-const db = require('./database')
+const db = require('../data/database')
 
 module.exports.getOneThread = async thread => {
     let { rows } = await db.query('select * from posts where thread = $1;', [

@@ -1,8 +1,8 @@
 describe('boardController', () => {
-    const boardController = require('../controllers/boardController')
-    const boardData = require('../data/boardData')
+    const boardController = require('./boardController')
+    const boardData = require('./boardData')
     const { MockRequest, MockResponse } = require('../tests/mocks')
-    jest.mock('../data/boardData')
+    jest.mock('./boardData')
 
     test('getAllBoards happy path', async () => {
         const expectedResponse = 'foo'

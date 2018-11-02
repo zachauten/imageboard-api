@@ -1,4 +1,4 @@
-const db = require('./database')
+const db = require('../data/database')
 
 module.exports.getAllBoards = async () => {
     let { rows } = await db.query('select * from boards;')

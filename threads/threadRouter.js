@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const threadController = require('../controllers/threadController')
+const threadController = require('./threadController')
 const asyncMiddleWare = require('../asyncMiddleware')
 
 router.get('/:thread(\\d+)', asyncMiddleWare(threadController.getOneThread))

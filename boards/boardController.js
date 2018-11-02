@@ -1,4 +1,4 @@
-const boardData = require('../data/boardData')
+const boardData = require('./boardData')
 
 module.exports.getAllBoards = async (req, res) => {
     let json = await boardData.getAllBoards()
